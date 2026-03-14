@@ -1,0 +1,192 @@
+﻿@model BlogPostCardViewModel
+
+<div class="post">
+    <div class="post-image-wrapper">
+        <img src=@Model.ImageUrl class="img-responsive" alt="post cover image" />
+        <span class="blog-date">
+            <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@Model.Id">
+                <i class="fas fa-edit"></i> @Model.UpdatedOn.ToLocalTime().ToString("MMMM dd, yyyy")
+            </a>
+        </span>
+    </div>
+    <div class="post-header clearfix">
+        <h2 class="post-title">
+            <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@Model.Id">@Model.Title</a>
+        </h2>
+
+        @if ((User.IsInRole(Roles.Administrator.ToString()) || User.IsInRole(Roles.Editor.ToString()) || Model.IsAuthor == true) && Model.ApplicationUser.IsBlocked == false)
+        {
+            <a asp-area="" asp-controller="Blog" asp-action="EditPost" asp-route-id="@Model.Id" class="btn btn-info">
+                <i class="fas fa-edit"></i> Edit Post
+            </a>
+            <a class="btn btn-danger" data-toggle="modal" data-target="#modal-@Model.Id">
+                <i class="fas fa-trash-alt"></i> Delete Post
+            </a>
+        }
+
+        @if (User.IsInRole(Roles.Administrator.ToString()) || User.IsInRole(Roles.Editor.ToString()))
+        {
+            @if (Model.PostStatus == PostStatus.Pending)
+            {
+                <a asp-area="Editor" asp-controller="Post" asp-action="ApprovePost" asp-route-id="@Model.Id" class="btn btn-info">
+                    <i class="fas fa-check"></i> Approve Post
+                </a>
+            }
+            else
+            {
+                @if (Model.PostStatus == PostStatus.Banned)
+                {
+                    <a asp-area="Editor" asp-controller="Post" asp-action="UnbanPost" asp-route-id="@Model.Id" class="btn btn-danger">
+                        <i class="fas fa-unlock-alt"></i> Unban Post
+                    </a>
+                }
+                else
+                {
+                    <a asp-area="Editor" asp-controller="Post" asp-action="BanPost" asp-route-id="@Model.Id" class="btn btn-info">
+                        <i class="fas fa-lock"></i> Ban Post
+                    </a>
+                }
+            }
+        }
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="dropdown">
+                <a class="btn btn-success dropbtn"><i class="far fa-heart"></i> @Model.Likes Likes</a>
+                <div class="dropdown-content">
+                    @foreach (var liker in Model.Likers)
+                    {
+                        <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@liker.UserName">
+                            <img class="likerAvatar" src="@(string.IsNullOrWhiteSpace(liker.ImageUrl) ? Url.Content("~/images/AnhDaiDien.png") : liker.ImageUrl)" alt="avatar" onerror="this.onerror=null;this.src='@Url.Content("~/images/AnhDaiDien.png")';" />
+                            @liker.FirstName @liker.LastName (@@@liker.UserName)
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+        <div class="post-meta">
+            <span class="post-meta-author">
+                Posted on
+                <span class="post-meta-cats"> @Model.CreatedOn.ToLocalTime().ToString("dd-MMMM-yyyy")</span>
+                by
+                <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@Model.ApplicationUser.UserName"> @Model.ApplicationUser.UserName</a>
+            </span>
+            <span class="post-meta-cats">
+                in
+                <a asp-area="" asp-controller="Category" asp-action="Index" asp-route-id="@Model.Category.Id">
+                    @Model.Category.Name
+                </a>
+            </span>
+            <br />
+            <span class="post-meta-cats">
+                Post Status:
+                @if (Model.PostStatus == PostStatus.Banned)
+                {
+                    <font color="red" size="2"><b>@Model.PostStatus.ToString()</b></font>
+                }
+                else
+                {
+                    @if (Model.PostStatus == PostStatus.Approved)
+                    {
+                        <font color="green" size="2"><b>@Model.PostStatus.ToString()</b></font>
+                    }
+                    else
+                    {
+                        <font color="blue" size="2"><b>@Model.PostStatus.ToString()</b></font>
+                    }
+                }
+            </span>
+            <div class="pull-right">
+                <div class="post-meta-comments" style="display: inline-block">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a>
+                            <i class="fa fa-comment-o"></i> @Model.CommentsCount
+                        </a>
+                    }
+                    else
+                    {
+                        <h><i class="fa fa-comment-o"></i> @Model.CommentsCount comments</h>
+                    }
+                </div>
+                <div class="post-meta-hits" style="display: inline-block">
+                    @if (Model.IsLiked == true)
+                    {
+                        <form asp-area="" asp-controller="Post" asp-action="UnlikePost" asp-route-postId="@Model.Id"
+                              method="post">
+                            <button type="submit" class="transparentCommentButton">
+                                <i class="fas fa-thumbs-down"></i> Unlike
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        @if (Model.IsLiked == false && SignInManager.IsSignedIn(User))
+                        {
+                            <form asp-area="" asp-controller="Post" asp-action="LikePost" asp-route-postId="@Model.Id"
+                                  method="post" style="display: inline-block">
+                                <button type="submit" class="transparentCommentButton">
+                                    <i class="fas fa-thumbs-up"></i> Like
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <h><i class="fas fa-thumbs-up"></i> @Model.Likes likes</h>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-body">
+        <p>@Html.Raw(Model.ShortContent)</p>
+    </div>
+    <div class="post-footer row" style="padding: 0px 7px 0px 7px">
+        <form asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@Model.Id"
+              method="get" style="display: inline-block">
+            <button type="submit" class="btn btn-primary">
+                Continue Reading <i class="fas fa-angle-double-right">&nbsp;</i>
+            </button>
+        </form>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            @if (!Model.IsFavourite)
+            {
+                <form asp-area="" asp-controller="Post" asp-action="AddToFavorite" asp-route-postId="@Model.Id"
+                      method="post" style="display: inline">
+                    <button type="submit" class="btn btn-primary pull-right">
+                        <i class="far fa-heart"></i> Add to favorite
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form asp-area="" asp-controller="Post" asp-action="RemoveFromFavorite" asp-route-postId="@Model.Id"
+                      method="post" style="display: inline">
+                    <button type="submit" style="float: right" class="btn btn-primary">
+                        <i class="fas fa-eraser"></i> Remove from favorite
+                    </button>
+                </form>
+            }
+        }
+    </div>
+</div>
+<div class="modal fade" id="modal-@Model.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Do you want to delete the post?</h5>
+            </div>
+            <div class="modal-body">Select "Delete" below if you are ready to delete the post.</div>
+            <div class="modal-footer">
+                <button style="display: inline-block" class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
+                <form asp-area="" asp-controller="Blog" asp-action="DeletePost" asp-route-postId="@Model.Id"
+                      method="post" style="display: inline-block">
+                    <button class="btn btn-danger">
+                        Delete Post
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

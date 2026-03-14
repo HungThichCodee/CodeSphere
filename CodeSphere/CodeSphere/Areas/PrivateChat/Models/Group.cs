@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+
+namespace CodeSphere.Areas.PrivateChat.Models
+{
+    public class Group
+    {
+        public Group()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+
+        [Key]
+        public string Id { get; set; }
+
+        [MaxLength(100)]
+        public string Name { get; set; }
+
+        [ForeignKey(nameof(ChatTheme))]
+        public string ChatThemeId { get; set; }
+
+        public ChatTheme ChatTheme { get; set; }
+
+        public ICollection<UserGroup> UsersGroups { get; set; } = new HashSet<UserGroup>();
+
+        public ICollection<ChatMessage> ChatMessages { get; set; } = new HashSet<ChatMessage>();
+
+        public ICollection<ChatImage> ChatImages { get; set; } = new HashSet<ChatImage>();
+    }
+}

@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CodeSphere</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="~/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="~/favicon.ico">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link id="style-switch" rel="stylesheet" runat="server" media="screen" type="text/css" href="~/css/presets/preset1.css">
+    <link rel="stylesheet" href="~/privateChat/css/privateChat.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/animate.css">
+    <link rel="stylesheet" href="~/css/prettyPhoto.css">
+    <link rel="stylesheet" href="~/css/owl.carousel.css">
+    <link rel="stylesheet" href="~/css/owl.theme.css">
+    <link rel="stylesheet" href="~/css/flexslider.css">
+    <link rel="stylesheet" href="~/css/cd-hero.css">
+    <link rel="stylesheet" href="~/lib/statusCodes/404/lionStyle.css">
+    <link rel="stylesheet" href="~/lib/statusCodes/404/trainStyle.css">
+    <link rel="stylesheet" href="~/css/userProfile/profileStyle.css">
+    <link rel="stylesheet" href="~/css/userProfile/userCard.css">
+    <link rel="stylesheet" href="~/css/blog/chooseFile.css">
+    <link rel="stylesheet" href="~/css/blog/multiSelect.css">
+    <link rel="stylesheet" href="~/css/blog/likesDropDown.css">
+    <link href="~/css/website/searchField.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/userProfile/notificaitonButton.css">
+    <link rel="stylesheet" href="~/css/userProfile/profileRating.css">
+    <link rel="stylesheet" href="~/notification/css/notificationStyle.css">
+    <link rel="stylesheet" href="~/userStatus/css/userStatusSheet.css" />
+    <link href="~/privateChat/css/emojiSheet.css" rel="stylesheet" />
+    <link href="~/css/blog/imageModalSheet.css" rel="stylesheet" />
+    <link href="~/privateChat/css/chatThemeSheet.css" rel="stylesheet" />
+    <link href="~/privateChat/css/chatStickersSheet.css" rel="stylesheet" />
+    <link href="~/privateChat/css/collectStickersSheet.css" rel="stylesheet" />
+    <link href="~/css/website/holidayThemeSheet.css" rel="stylesheet" />
+    <link href="~/privateChat/css/chatRepliesSheet.css" rel="stylesheet" />
+    <link href="~/css/blog/blogCommentsButtonsSheet.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/header.css" />
+</head>
+<body onload="setSiteTheme(); getLatestBlogPosts(); setHolidayTheme();">
+    <audio id="notificationAudio">
+        <source id="targetAudio" src="~/NotificationSound1.mp3" type="audio/mpeg">
+    </audio>
+    <div class="style-switch-wrapper">
+        <div class="style-switch-button">
+            <i class="fas fa-sliders"></i>
+        </div>
+        <h3>Style Options</h3>
+        <button id="preset1" class="btn btn-sm btn-primary"></button>
+        <button id="preset2" class="btn btn-sm btn-primary"></button>
+        <button id="preset3" class="btn btn-sm btn-primary"></button>
+        <button id="preset4" class="btn btn-sm btn-primary"></button>
+        <button id="preset5" class="btn btn-sm btn-primary"></button>
+        <button id="preset6" class="btn btn-sm btn-primary"></button>
+        <h3>Sound Options</h3>
+        <button id="sound1" class="btn btn-sm btn-primary">1</button>
+        <button id="sound2" class="btn btn-sm btn-primary">2</button>
+        <button id="sound3" class="btn btn-sm btn-primary">3</button>
+        <button id="sound4" class="btn btn-sm btn-primary">4</button>
+        <button id="sound5" class="btn btn-sm btn-primary">5</button>
+        <button id="sound6" class="btn btn-sm btn-primary">6</button>
+        <br /><br />
+        <a class="btn btn-sm btn-primary close-styler pull-right">Close X</a>
+    </div>
+    <div class="body-inner">
+        <header id="header" class="navbar-fixed-top header2" role="banner">
+            <div class="container">
+                <div class="row">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <div class="navbar-brand">
+                            <a asp-area="" asp-controller="Home" asp-action="Index">
+                                <img class="img-responsive" style="width: 270px;" src="~/images/CodeSphere-Photoroom.png" alt="logo">
+                            </a>
+                        </div>
+                    </div>
+                    <nav class="collapse navbar-collapse clearfix" role="navigation">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown active">
+                                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Blog" asp-action="Index">Blog</a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a>
+                            </li>
+                            <partial name="_LoginPartial" />
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <partial name="_HolidayPartial" />
+        @*<section class="renderBodySection">*@
+        @RenderBody()
+        @*</section>*@
+
+        <footer id="footer" class="footer footer2">
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-md-4 col-sm-12 footer-widget">
+                        <h3 class="widget-title">Latest Blog Posts</h3>
+
+                        <div class="img-gallery">
+                            <div class="img-container" id="latesBlogPosts">
+                                @*Here come latest blog posts*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 footer-widget">
+                        <h3 class="widget-title">Quick Links</h3>
+
+                        <ul class="unstyled arrow">
+                            <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li><a asp-area="" asp-controller="Blog" asp-action="Index">Blog</a></li>
+                            <li><a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a></li>
+                            <partial name="_FooterLoginPartial" />
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-12 footer-widget footer-about-us">
+                        <h3 class="widget-title">About Craft</h3>
+                        <p>We are a awward winning multinational company. We believe in quality and standard worldwide.</p>
+                        <p><strong>Address: </strong>VietNam, HoChiMinh</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Email: </strong>
+                                <p>CodeSphere@gmail.com</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Phone:</strong>
+                                <p>(+84) 0971688824</p>
+                            </div>
+                        </div>
+                        <br />
+                        @if (User.IsInRole(Roles.Administrator.ToString()))
+                        {
+                            <p><a asp-area="Administration" asp-controller="Dashboard" asp-action="Index" class="btn btn-success solid square"><i class="fas fa-user-shield"></i> Go To Administration Panel <i class="fa fa-long-arrow-right"></i></a></p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <section id="copyright" class="copyright angle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <ul class="footer-social unstyled">
+                            <li>
+                                <a title="Facebook" href="#">
+                                    <span class="icon-pentagon wow bounceIn"><i class="fab fa-facebook"></i></span>
+                                </a>
+                                <a title="Google+" href="#">
+                                    <span class="icon-pentagon wow bounceIn"><i class="fab fa-google-plus"></i></span>
+                                </a>
+                                <a title="linkedin" href="#">
+                                    <span class="icon-pentagon wow bounceIn"><i class="fab fa-linkedin"></i></span>
+                                </a>
+                                <a title="Pinterest" href="#">
+                                    <span class="icon-pentagon wow bounceIn"><i class="fab fa-pinterest"></i></span>
+                                </a>
+                                <a title="Skype" href="#">
+                                    <span class="icon-pentagon wow bounceIn"><i class="fab fa-skype"></i></span>
+                                </a>
+                                <a title="Dribble" href="#">
+                                    <span class="icon-pentagon wow bounceIn"><i class="fab fa-dribbble"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <div class="copyright-info">
+                            &copy; Copyright 2025 CodeSphere Project. <span>Designed by <a href="https://CodeSphere.com">CodeSphere.com</a></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="back-to-top" data-spy="affix" data-offset-top="10" class="back-to-top affix">
+                    <button class="btn btn-primary" title="Back to Top"><i class="fas fa-angle-double-up"></i></button>
+                </div>
+            </div>
+        </section>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a asp-area="UserNotifications" asp-controller="Notification" asp-action="Index" class="float">
+                <i class="fas fa-bell my-float"></i>
+                <span class="badge" id="notificationCount">3</span>
+            </a>
+        }
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/js/jquery.js"></script>
+        <script type="text/javascript" src="~/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="~/js/website/styleSwitcher.js"></script>
+        <script type="text/javascript" src="~/js/owl.carousel.js"></script>
+        <script type="text/javascript" src="~/js/jquery.prettyPhoto.js"></script>
+        <script type="text/javascript" src="~/js/jquery.flexslider.js"></script>
+        <script type="text/javascript" src="~/js/cd-hero.js"></script>
+        <script type="text/javascript" src="~/js/isotope.js"></script>
+        <script type="text/javascript" src="~/js/ini.isotope.js"></script>
+        <script type="text/javascript" src="~/js/wow.min.js"></script>
+        <script type="text/javascript" src="~/js/smoothscroll.js"></script>
+        <script type="text/javascript" src="~/js/jquery.easing.1.3.js"></script>
+        <script type="text/javascript" src="~/js/jquery.counterup.min.js"></script>
+        <script type="text/javascript" src="~/js/waypoints.min.js"></script>
+        <script type="text/javascript" src="~/js/custom.js"></script>
+        <script type="text/javascript" src="~/lib/statusCodes/404/lionScript.js"></script>
+        <script type="text/javascript" src="~/js/userProfile/profileScripts.js"></script>
+        <script type="text/javascript" src="~/js/website/layoutScript.js"></script>
+        <script type="text/javascript" src="~/js/notify.js"></script>
+        <script src="https://kit.fontawesome.com/b0b195894f.js" crossorigin="anonymous"></script>
+        <script src="~/lib/signalr/dist/browser/signalr.js" asp-append-version="true"></script>
+        <script src="~/lib/moment/min/moment-with-locales.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/notification/js/notification.js"></script>
+        <script type="text/javascript" src="~/userStatus/js/userStatus.js"></script>
+        <script type="text/javascript" src="~/js/blog/imageModalScript.js"></script>
+        <script type="text/javascript" src="~/js/website/holidayThemeScript.js"></script>
+        <script src="~/js/header.js"></script>
+        @RenderSection("Scripts", required: false)
+    </div>
+</body>
+</html>

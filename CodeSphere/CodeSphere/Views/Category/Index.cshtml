@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = Model.Category.Name;
+}
+
+@model CategoryPageViewModel
+
+<div id="banner-area">
+    <img src="~/images/banner/banner2.jpg" alt="" />
+    <div class="parallax-overlay"></div>
+    <div class="banner-title-content">
+        <div class="text-center">
+            <h2>@Model.Category.Name Category</h2>
+            <ul class="breadcrumb">
+                <li>Home</li>
+                <li><a asp-area="" asp-controller="Blog" asp-action="Index"> Blog</a></li>
+                <li>
+                    <a asp-area="" asp-controller="Category" asp-action="Index" asp-route-id="@Model.Category.Id">
+                        @Model.Category.Name
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<section id="main-container">
+    <div class="container">
+        <h2 class="headerSwitch"><i class="fas fa-tag"></i> @Model.Category.Name</h2>
+        <p>@Html.Raw(Model.Category.Description)</p>
+
+        @if (User.IsInRole(Roles.Administrator.ToString()) || User.IsInRole(Roles.Editor.ToString()))
+        {
+            <a asp-area="Editor" asp-controller="EditCategory" asp-action="Index" asp-route-id="@Model.Category.Id" class="btn btn-success" type="submit">
+                <i class="fas fa-edit"></i> Edit Category
+            </a>
+        }
+        <br />
+        <br />
+        <div>
+            <div class="headerSwitch pull-right" style="text-align: right">
+                <i class="fas fa-clock"></i> @Model.Category.CreatedOn.ToString("MMMM dd, yyyy")
+            </div>
+            <div class="headerSwitch" style="text-align: left">
+                <i class="fas fa-edit"></i> @Model.Category.UpdatedOn.ToString("MMMM dd, yyyy")
+            </div>
+        </div>
+        <hr />
+        <partial name="_TempDataPartial" />
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                @foreach (var post in Model.Posts)
+                {
+                    @await Html.PartialAsync("_BlogPostPartial", post)
+                }
+                <div class="row" style="text-align: center">
+                    @Html.PagedListPager((IPagedList)Model.Posts,
+                            page => Url.Action("Index", "Category",
+                    new { page = page }),
+                    PagedListRenderOptions.OnlyShowFivePagesAtATime)
+                </div>
+            </div>
+            @await Component.InvokeAsync("Blog")
+        </div>
+    </div>
+</section>

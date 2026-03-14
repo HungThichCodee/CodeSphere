@@ -1,0 +1,156 @@
+﻿@{
+    ViewData["Title"] = "Users Information";
+}
+
+@model AllUsersViewModel
+
+<link href="~/administration/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+<partial name="_TempDataPartial" />
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Users Information</h1>
+    </div>
+    <hr />
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h5 mb-0 text-gray-800">All Users</h1>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Information For Each User</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Name</th>
+                            <th>Roles</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Registered On</th>
+                            <th>Is Blocked</th>
+                            <th>Place</th>
+                            <th>About Me</th>
+                            <th>Birthday</th>
+                            <th>Gender</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Username</th>
+                            <th>Name</th>
+                            <th>Roles</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Registered On</th>
+                            <th>Is Blocked</th>
+                            <th>Place</th>
+                            <th>About Me</th>
+                            <th>Birthday</th>
+                            <th>Gender</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var user in this.Model.ApplicationUsers)
+                        {
+                            <tr onmouseover="markTableRow()">
+                                <td height="125px">
+                                    <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@user.UserName" target="_blank">
+                                        @user.UserName
+                                    </a>
+                                </td>
+                                <td height="125px">
+                                    @user.FirstName @user.LastName
+                                </td>
+                                <td height="125px">
+                                    @foreach (var role in user.Roles.OrderBy(x => x.RoleLevel))
+                                    {
+                                        @if (role.Name == Roles.Administrator.ToString())
+                                        {
+                                            <span class="badge badge-success">@role.Name</span>
+                                        }
+                                        @if (role.Name == Roles.Editor.ToString())
+                                        {
+                                            <span class="badge badge-primary">@role.Name</span>
+
+                                        }
+                                        @if (role.Name == Roles.Author.ToString())
+                                        {
+                                            <span class="badge badge-warning">@role.Name</span>
+
+                                        }
+                                        @if (role.Name == Roles.Contributor.ToString())
+                                        {
+                                            <span class="badge badge-info">@role.Name</span>
+
+                                        }
+                                        @if (role.Name == Roles.Subscriber.ToString())
+                                        {
+                                            <span class="badge badge-secondary">@role.Name</span>
+
+                                        }
+                                    }
+                                </td>
+                                <td height="125px">
+                                    @user.Email - @user.EmailConfirmed.ToString().ToUpper()
+                                </td>
+                                <td height="125px">
+                                    (@user.CountryCode?.Code.ToString()) @user.PhoneNumber - @user.PhoneNumberConfirmed.ToString().ToUpper()
+                                </td>
+                                <td height="125px">
+                                    @user.RegisteredOn.ToLocalTime().ToString("dd-MMMM-yyyy hh:mm:ss tt")
+                                </td>
+                                <td height="125px">
+                                    @if (@user.IsBlocked)
+                                    {
+                                        <span style="color: red">@user.IsBlocked.ToString().ToUpper()</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@user.IsBlocked.ToString().ToUpper()</span>
+                                    }
+                                </td>
+                                <td height="125px">
+                                    @user.Country?.Name, @user.State?.Name, @user.City?.Name, @user.ZipCode?.Code
+                                </td>
+                                <td height="125px" width="120px">
+                                    <div style="width: 250px !important; height: 125px; overflow: auto">
+                                        @user.AboutMe
+                                    </div>
+                                </td>
+                                <td height="125px">
+                                    @if (user.BirthDate.ToLocalTime().Day == DateTime.Now.Day && user.BirthDate.ToLocalTime().Month == DateTime.Now.Month)
+                                    {
+                                        <span style="color: chartreuse">
+                                            <i class="fas fa-birthday-cake"></i>
+                                            @user.BirthDate.ToLocalTime().ToString("dd-MMMM-yyyy")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @user.BirthDate.ToLocalTime().ToString("dd-MMMM-yyyy")
+                                    }
+                                </td>
+                                <td height="125px">
+                                    @user.Gender
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/administration/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/administration/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/administration/js/demo/datatables-demo.js"></script>
+    <script src="~/administration/js/dataTableScripts.js"></script>
+}

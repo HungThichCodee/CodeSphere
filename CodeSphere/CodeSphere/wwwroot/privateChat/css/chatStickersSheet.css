@@ -1,0 +1,145 @@
+﻿.stickersTypesTabs {
+    border-bottom: 1.8px solid slategray;
+    border-radius: 6px;
+    padding-bottom: 3px;
+    padding-top: 9px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    text-align: center;
+    max-width: 330px;
+    box-shadow: 0px 10px 18px -8px #8888FE;
+}
+
+    .stickersTypesTabs::-webkit-scrollbar {
+        width: 8px;
+        height: 4px;
+    }
+
+    .stickersTypesTabs::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .stickersTypesTabs::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background-clip: padding-box;
+        background: #888;
+    }
+
+.stickerTypeTabIcon {
+    padding: 6px;
+}
+
+.singleStickerTypeForTab {
+    border-radius: 4px;
+}
+
+.singleStickerTypeForTab {
+    display: inline-flex;
+    align-items: center;
+    width: 35px;
+}
+
+    .singleStickerTypeForTab:hover {
+        visibility: visible;
+        background-color: lightgrey;
+        padding: 1px 1px 1px 1px;
+    }
+
+.stickerTypeTabIcon:hover .remove-sticker-type-icon {
+    visibility: visible;
+}
+
+.single-sticker {
+    width: 60px;
+    margin: 8px;
+    border-radius: 4px;
+}
+
+    .single-sticker:hover {
+        background-color: lightgrey;
+        padding: 1px 1px 1px 1px;
+    }
+
+.chat-sticker-tooltip {
+    visibility: hidden;
+    width: 330px;
+    background-color: whitesmoke;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 138%;
+    left: -50%;
+}
+
+    .chat-sticker-tooltip::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 25px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent whitesmoke transparent;
+    }
+
+.stickers-icon .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+.sticker-tab-section {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 300px;
+}
+
+    .sticker-tab-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .sticker-tab-section::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sticker-tab-section::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background-clip: padding-box;
+        background: #888;
+    }
+
+.editStickerTypeImage {
+    width: 100px;
+}
+
+.editStickerImage {
+    width: 100px;
+}
+
+.singleStickerForDelete {
+    width: 74px;
+    padding: 4px;
+}
+
+    .singleStickerForDelete:hover {
+        background-color: lightgrey;
+        padding: 1px 1px 1px 1px;
+    }
+
+.remove-sticker-type-icon {
+    visibility: hidden;
+    position: relative;
+    font-size: 12px;
+    color: white;
+    bottom: 17px;
+    right: 11px;
+}
+
+    .remove-sticker-type-icon:hover {
+        color: red;
+        font-weight: lighter;
+        font-size: 13px;
+    }

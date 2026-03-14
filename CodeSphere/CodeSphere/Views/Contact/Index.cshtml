@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Contact";
+}
+
+@model ContactInputModel
+
+<div id="banner-area">
+    <img src="~/images/banner/banner2.jpg" alt="" />
+    <div class="parallax-overlay"></div>
+    <!-- Subpage title start -->
+    <div class="banner-title-content">
+        <div class="text-center">
+            <h2>Contact Us</h2>
+            <ul class="breadcrumb">
+                <li>Home</li>
+                <li><a asp-area="" asp-controller="Contact" asp-action="Index"> Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<section id="main-container">
+    <div class="container">
+        <div class="row">
+            <partial name="_TempDataPartial" />
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <form id="contact-form" method="post" role="form">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Name">Name</label>
+                                <input class="form-control" asp-for="Name" placeholder="" type="text">
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Email">Email</label>
+                                <input class="form-control" asp-for="Email" placeholder="" type="email">
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Subject">Subject</label>
+                                <input class="form-control" asp-for="Subject" placeholder="">
+                                <span asp-validation-for="Subject" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Message">Message</label>
+                        <textarea class="form-control" asp-for="Message" placeholder="" rows="10" style="resize: vertical"></textarea>
+                        <span asp-validation-for="Message" class="text-danger"></span>
+                    </div>
+                    <div class="text-right">
+                        <br>
+                        <button class="btn btn-primary solid blank" type="submit">Send Message</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-5">
+                <div class="contact-info">
+                    <h3>Contact Details</h3>
+                    <p>Feel free to ask any questions.</p>
+                    <br>
+                    <p><i class="fas fa-home info"></i>Vietnam, HoChiMinh</p>
+                    <p><i class="fas fa-phone info"></i>(+84) 0971688824</p>
+                    <p><i class="fa fa-envelope-o info"></i>CodeSphere@gmail.com</p>
+                    <p><i class="fas fa-globe info"></i>www.CodeSphere.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://www.google.com/recaptcha/api.js?render=@GoogleReCaptch.Value.SiteKey"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@GoogleReCaptch.Value.SiteKey', { action: 'homepage' }).then(function (token) {
+
+            });
+        });
+    </script>
+}

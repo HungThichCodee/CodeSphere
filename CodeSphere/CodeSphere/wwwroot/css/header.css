@@ -1,0 +1,13 @@
+﻿/* Hi?u ?ng ?n/hi?n navbar */
+#header {
+    transition: top 0.3s ease-in-out;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+    top: 0;
+}
+
+    /* Khi ?n th? ð?y navbar lên trên */
+    #header.hidden {
+        top: -100px;
+    }

@@ -1,0 +1,209 @@
+﻿@{
+    ViewData["Title"] = "Blog Component";
+}
+
+@model BlogComponentViewModel
+
+<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+    <div class="sidebar sidebar-right">
+        <div class="widget widget-search">
+            <h3 class="widget-title">Search</h3>
+            <form asp-controller="Blog" asp-action="Index" method="get">
+                <div class="wrap">
+                    <div class="search">
+                        <input autocomplete="off" type="text" class="searchTerm" value="@Model.Search" name="search" placeholder="Filter posts ...">
+                        <button type="submit" class="searchButton">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="widget widget-tab">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#popular-tab" data-toggle="tab">popular</a></li>
+                <li class=""><a href="#recent-tab" data-toggle="tab">recent</a></li>
+                <li class=""><a href="#comments-tab" data-toggle="tab">comments</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="popular-tab">
+                    <ul class="posts-list unstyled clearfix" style="height: 250px; overflow: auto">
+                        @foreach (var post in Model.TopPosts)
+                        {
+                            <li>
+                                <div class="posts-thumb pull-left">
+                                    <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">
+                                        <img alt="img" src=@post.ImageUrl>
+                                    </a>
+                                </div>
+                                <div class="post-content">
+                                    <h4 class="entry-title">
+                                        <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">@post.Title</a>
+                                    </h4>
+                                    <p class="post-meta">
+                                        <span class="post-meta-author">
+                                            Posted by
+                                            <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@post.ApplicationUser.UserName">
+                                                @post.ApplicationUser.UserName
+                                            </a>
+                                        </span>
+                                        <br />
+                                        <span class="post-meta-date">
+                                            <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">
+                                                <i class="fas fa-clock"></i>
+                                                @post.CreatedOn.ToLocalTime().ToString("MMMM dd")
+                                            </a>
+                                        </span>
+                                        <span class="post-meta-cats">
+                                            Post Status:
+                                            @if (post.PostStatus == PostStatus.Banned)
+                                            {
+                                                <font color="red" size="2"><b>@post.PostStatus.ToString()</b></font>
+                                            }
+                                            else
+                                            {
+                                                @if (post.PostStatus == PostStatus.Approved)
+                                                {
+                                                    <font color="green" size="2"><b>@post.PostStatus.ToString()</b></font>
+                                                }
+                                                else
+                                                {
+                                                    <font color="blue" size="2"><b>@post.PostStatus.ToString()</b></font>
+                                                }
+                                            }
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="tab-pane" id="recent-tab">
+                    <ul class="posts-list unstyled clearfix" style="height: 250px; overflow: auto">
+                        @foreach (var post in Model.RecentPosts)
+                        {
+                            <li>
+                                <div class="posts-thumb pull-left">
+                                    <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">
+                                        <img alt="img" src=@post.ImageUrl>
+                                    </a>
+                                </div>
+                                <div class="post-content">
+                                    <h4 class="entry-title">
+                                        <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">@post.Title</a>
+                                    </h4>
+                                    <p class="post-meta">
+                                        <span class="post-meta-author">
+                                            Posted by
+                                            <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@post.ApplicationUser.UserName">
+                                                @post.ApplicationUser.UserName
+                                            </a>
+                                        </span>
+                                        <br />
+                                        <span class="post-meta-date">
+                                            <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">
+                                                <i class="fas fa-clock"></i>
+                                                @post.CreatedOn.ToLocalTime().ToString("MMMM dd")
+                                            </a>
+                                        </span>
+                                        <span class="post-meta-cats">
+                                            Post Status:
+                                            @if (post.PostStatus == PostStatus.Banned)
+                                            {
+                                                <font color="red" size="2"><b>@post.PostStatus.ToString()</b></font>
+                                            }
+                                            else
+                                            {
+                                                @if (post.PostStatus == PostStatus.Approved)
+                                                {
+                                                    <font color="green" size="2"><b>@post.PostStatus.ToString()</b></font>
+                                                }
+                                                else
+                                                {
+                                                    <font color="blue" size="2"><b>@post.PostStatus.ToString()</b></font>
+                                                }
+                                            }
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="tab-pane" id="comments-tab">
+                    <ul class="posts-list unstyled clearfix" style="height: 250px; overflow: auto">
+                        @foreach (var comment in Model.RecentComments)
+                        {
+                            <li>
+                                <div class="posts-avator pull-left">
+                                    <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@comment.ApplicationUser.UserName">
+                                        <img alt="avatar" src="@(string.IsNullOrEmpty(comment.ApplicationUser.ImageUrl) ? Url.Content("~/images/AnhDaiDien.png") : comment.ApplicationUser.ImageUrl)">
+                                    </a>
+                                </div>
+                                <div class="post-content">
+                                    <h4 class="entry-title">
+                                        <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@comment.PostId">
+                                            @Html.Raw(@comment.ShortContent)
+                                        </a>
+                                    </h4>
+                                    <p class="post-meta">
+                                        <span class="post-meta-date">
+                                            <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@comment.PostId">
+                                                <i class="fas fa-clock"></i>
+                                                @comment.CreatedOn.ToLocalTime().ToString("MMMM dd")
+                                            </a>
+                                        </span>
+                                        <span class="post-meta-author">
+                                            by
+                                            <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@comment.ApplicationUser.UserName">
+                                                @comment.ApplicationUser.UserName
+                                            </a>
+                                        </span>
+                                        <span class="post-meta-date">
+                                            <i class="fas fa-info-circle"></i>
+                                            @if (comment.CommentStatus == CommentStatus.Approved)
+                                            {
+                                                <font color="green" size="2"><b>@comment.CommentStatus.ToString()</b></font>
+                                            }
+                                            else
+                                            {
+                                                <font color="blue" size="2"><b>@comment.CommentStatus.ToString()</b></font>
+                                            }
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="widget widget-categories">
+            <h3 class="widget-title">
+                <a asp-area="" asp-controller="AllCategories" asp-action="Index">
+                    Blog Categories
+                </a>
+            </h3>
+            <ul class="category-list clearfix" style="height: 250px; overflow: auto">
+                @foreach (var category in Model.TopCategories)
+                {
+                    <li><a asp-area="" asp-controller="Category" asp-action="Index" asp-route-id="@category.Id">@category.Name</a><span class="posts-count"> (@category.PostsCount)</span></li>
+                }
+            </ul>
+        </div>
+        <div class="widget widget-tags">
+            <h3 class="widget-title">Blog Tags</h3>
+            <ul class="unstyled clearfix">
+                @foreach (var tag in Model.TopTags)
+                {
+                    <li><a asp-area="" asp-controller="Tag" asp-action="Index" asp-route-id="@tag.Id">@tag.Name (@tag.Count)</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

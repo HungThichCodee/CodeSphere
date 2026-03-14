@@ -1,0 +1,35 @@
+﻿@using CodeSphere
+@using CodeSphere.Models
+@using CodeSphere.ViewModels.Blog.InputModels
+@using CodeSphere.SecurityModels
+@using Microsoft.Extensions.Options
+@using CodeSphere.ViewModels.PostViewModels.InputModels
+@using CodeSphere.Models.User
+@using Microsoft.AspNetCore.Identity
+@using CodeSphere.ViewModels.Blog.ViewModels
+@using CodeSphere.Areas.Administration.Models.Enums
+@using X.PagedList.Mvc.Core
+@using X.PagedList
+@using CodeSphere.ViewModels.CategoryViewModels
+@using CodeSphere.ViewModels.CommentViewModels.ViewModels
+@using CodeSphere.ViewModels.Contacts
+@using CodeSphere.ViewModels.Home
+@using CodeSphere.ViewModels.PostViewModels.ViewModels
+@using CodeSphere.Models.Enums
+@using CodeSphere.ViewModels.Users.ViewModels
+@using CodeSphere.ViewModels.Profile
+@using CodeSphere.ViewModels.Pagination.Profile
+@using CodeSphere.ViewModels.Pagination.AllUsers
+@using CodeSphere.ViewModels.TagViewModels
+@using CodeSphere.ViewModels.TagViewModels.TagPage
+@using CodeSphere.ViewModels.TagViewModels.TopTag
+@using CodeSphere.ViewModels.UserPostsViewModels
+@using CodeSphere.ViewModels.AllCategories.ViewModels
+@using CodeSphere.ViewModels.Blog.ViewModels.BlogPostCard
+@using CodeSphere.ViewModels.PostViewModels.ViewModels.PostPage
+@using CodeSphere.ViewModels.CategoryViewModels.ViewModels.CategoryPage
+@using CodeSphere.ViewModels.CommentViewModels.InputModels
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IOptions<ReCaptchSettings> GoogleReCaptch
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

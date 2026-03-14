@@ -1,0 +1,45 @@
+﻿using CodeSphere.Constraints;
+using CodeSphere.Models.User;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace CodeSphere.ApplicationAttributes.ActionAttributes
+{
+    public class UserBlockedAttribute : ActionFilterAttribute
+    {
+        private readonly string redirectActionName;
+        private readonly string redirectControllerName;
+
+        public UserBlockedAttribute(string redirectActionName, string redirectControllerName)
+        {
+            this.redirectActionName = redirectActionName;
+            this.redirectControllerName = redirectControllerName;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            var userManager = context
+                .HttpContext
+                .RequestServices
+                .GetService(typeof(UserManager<ApplicationUser>)) as UserManager<ApplicationUser>;
+
+            var username = context.HttpContext.User.Identity.Name;
+
+            if (!string.IsNullOrEmpty(username))
+            {
+                var user = userManager.FindByNameAsync(username).Result;
+                var controller = context.Controller as Controller;
+
+                if (user.IsBlocked)
+                {
+                    controller.TempData["Error"] = ErrorMessages.YouAreBlock;
+                    context.Result = new RedirectToActionResult(
+                        this.redirectActionName,
+                        this.redirectControllerName,
+                        new { username });
+                }
+            }
+        }
+    }
+}

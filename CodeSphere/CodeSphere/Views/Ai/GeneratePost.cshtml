@@ -1,0 +1,72 @@
+@using CodeSphere.ViewModels.Blog.InputModels
+@model GeneratePostInputModel
+@{
+    ViewData["Title"] = "Generate Post with AI";
+}
+
+<div id="banner-area">
+    <img src="~/images/banner/banner2.jpg" alt="" />
+    <div class="parallax-overlay"></div>
+    <div class="banner-title-content">
+        <div class="text-center">
+            <h2>Generate Post with AI</h2>
+            <ul class="breadcrumb">
+                <li>Home</li>
+                <li><a asp-area="" asp-controller="Blog" asp-action="Index"> Blog</a></li>
+                <li><a asp-area="" asp-controller="Ai" asp-action="GeneratePost"> Generate with AI</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Generate your post with AI</h1>
+    <hr />
+</div>
+
+<div class="container">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["Error"]
+        </div>
+    }
+
+    <form method="post" asp-action="GeneratePost">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label asp-for="Topic"></label>
+                <input asp-for="Topic" class="form-control" placeholder="Ví dụ: Lập trình C# cơ bản" />
+                <span asp-validation-for="Topic" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label asp-for="AdditionalContext"></label>
+                <textarea asp-for="AdditionalContext" class="form-control" rows="4" placeholder="Yêu cầu bổ sung (tùy chọn): Ví dụ: Viết về các khái niệm cơ bản, có ví dụ code"></textarea>
+                <span asp-validation-for="AdditionalContext" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-magic"></i> Generate Post
+                </button>
+                <a asp-controller="Blog" asp-action="CreatePost" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Manual Create
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

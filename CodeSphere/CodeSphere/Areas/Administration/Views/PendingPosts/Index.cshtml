@@ -1,0 +1,103 @@
+﻿@{
+    ViewData["Title"] = "Blog addons";
+}
+
+@model ICollection<AdminPendingPostViewModel>
+
+<link href="~/administration/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+<partial name="_TempDataPartial" />
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">Pending Posts</h1>
+    <hr />
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Blog pending posts</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Content</th>
+                            <th>User</th>
+                            <th>Created On</th>
+                            <th>ML Prediction</th>
+                            <th>ML Score</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Title</th>
+                            <th>Content</th>
+                            <th>User</th>
+                            <th>Created On</th>
+                            <th>ML Prediction</th>
+                            <th>ML Score</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr onmouseover="markTableRow()">
+                                <td width="120px" height="80">
+                                    <div style="height: 80px; overflow: auto">
+                                        <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@item.Post.Id">
+                                            @item.Post.Title
+                                        </a>
+                                    </div>
+                                </td>
+                                <td height="80">
+                                    <div style="height: 80px; overflow: auto">
+                                        @item.Post.ShortContent
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-Username="@item.User.UserName">
+                                        @item.User.UserName
+                                    </a>
+                                </td>
+                                <td width="200px">@item.Post.CreatedOn.ToLocalTime().ToString("dd-MMMM-yyyy HH:mm tt")</td>
+                                <td style="text-align: center">
+                                    <span class="badge badge-info" style="font-size: 15px">@item.MlPrediction</span>
+                                </td>
+                                <td>
+                                    @{
+                                        string style = item.MlScore <= 0.80m ? "font-weight: bold; color: red;" : string.Empty;
+                                    }
+                                    <div style="@style">
+                                        @item.MlScore
+                                    </div>
+                                </td>
+                                <td width="100">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a asp-area="Editor" asp-controller="Post" asp-action="ApprovePost" asp-route-id="@item.Post.Id" class="btn btn-info">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a asp-area="" asp-controller="Blog" asp-action="DeletePost" asp-route-id="@item.Post.Id" class="btn btn-danger">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/administration/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/administration/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/administration/js/demo/datatables-demo.js"></script>
+    <script src="~/administration/js/dataTableScripts.js"></script>
+}

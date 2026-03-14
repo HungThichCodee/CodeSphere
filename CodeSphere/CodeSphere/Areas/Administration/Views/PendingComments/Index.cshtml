@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "Blog addons";
+}
+
+@model ICollection<AdminPendingCommentViewModel>
+
+<link href="~/administration/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+<partial name="_TempDataPartial" />
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">Pending Comments</h1>
+    <hr />
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Blog pending comments</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Content</th>
+                            <th>User</th>
+                            <th>Created On</th>
+                            <th>ML Prediction</th>
+                            <th>ML Score</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Title</th>
+                            <th>Content</th>
+                            <th>User</th>
+                            <th>Created On</th>
+                            <th>ML Prediction</th>
+                            <th>ML Score</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr onmouseover="markTableRow()">
+                                <td width="120px" height="80">
+                                    <div style="height: 80px; overflow: auto">
+                                        <a asp-area="" asp-controller="Post" asp-action="Index" asp-route-postId="@item.Comment.Post.Id">
+                                            @item.Comment.Post.Title
+                                        </a>
+                                    </div>
+                                </td>
+                                <td height="80">
+                                    <div style="height: 80px; overflow: auto">
+                                        @Html.Raw(@item.Comment.Content)
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-Username="@item.User.UserName">
+                                        @item.User.UserName
+                                    </a>
+                                </td>
+                                <td width="200px">@item.Comment.CreatedOn.ToLocalTime().ToString("dd-MMMM-yyyy HH:mm tt")</td>
+                                <td style="text-align: center">
+                                    <span class="badge badge-info" style="font-size: 15px">@item.MlPrediction</span>
+                                </td>
+                                <td>
+                                    @{
+                                        string style = item.MlScore <= 0.70m ? "font-weight: bold; color: red;" : string.Empty;
+                                    }
+                                    <div style="@style">
+                                        @item.MlScore
+                                    </div>
+                                </td>
+                                <td width="100">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <form asp-area="Editor" asp-controller="Comment" asp-action="ApproveComment"
+                                                  asp-route-commentId="@item.Comment.Id" asp-route-postId="@item.Comment.PostId"
+                                                  method="post" style="display:inline-block">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-info">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <form asp-area="" asp-controller="Comment" asp-action="DeleteById" asp-route-commentId="@item.Comment.Id" asp-route-postId="@item.Comment.PostId" method="post" style="display:inline-block">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/administration/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/administration/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/administration/js/demo/datatables-demo.js"></script>
+    <script src="~/administration/js/dataTableScripts.js"></script>
+}

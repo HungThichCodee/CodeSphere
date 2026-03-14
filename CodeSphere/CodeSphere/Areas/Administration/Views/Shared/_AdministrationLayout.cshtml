@@ -1,0 +1,310 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using CodeSphere.Models.User
+@inject UserManager<ApplicationUser> userManager
+@{
+    string username = User.Identity.Name;
+    string firstName = @userManager.FindByNameAsync(User.Identity.Name).Result.FirstName;
+    string lastName = @userManager.FindByNameAsync(User.Identity.Name).Result.LastName;
+    var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+    string imageUrl = string.IsNullOrWhiteSpace(user?.ImageUrl) ? Url.Content("~/images/AnhDaiDien.png") : user.ImageUrl;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Admin @ViewData["Title"] - CodeSphere</title>
+    <link href="~/administration/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ek+Mukta:300,400,600|Open+Sans:400,800" rel="stylesheet">
+    <link href="~/administration/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="~/administration/css/DropDownStyle.css" rel="stylesheet">
+    <link href="~/administration/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="~/privateChat/css/emojiSheet.css" rel="stylesheet" />
+    <link href="~/privateChat/css/chatStickersSheet.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="wrapper">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <li class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fab fa-studiovinari"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">CodeSphere Admin <sup>2</sup></div>
+            </li>
+            <li>
+                <hr class="sidebar-divider my-0">
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" asp-area="Administration" asp-controller="Dashboard" asp-action="Index">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <hr class="sidebar-divider">
+            </li>
+            <li class="sidebar-heading">
+                Interface
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-database"></i>
+                    <span>DB Usage</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom DB usage:</h6>
+                        <a asp-area="Administration" asp-controller="DbUsage" asp-action="DeleteUsersActivities" class="collapse-item">Delete Users Activities</a>
+                        <a asp-area="Administration" asp-controller="DbUsage" asp-action="DeleteUsersImages" class="collapse-item">Delete Users Images</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-gavel"></i>
+                    <span>Users Penalties</span>
+                </a>
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Penalties:</h6>
+                        <a asp-area="Administration" asp-controller="UsersPenalties" asp-action="BlockUnblockUser" class="collapse-item">Block/Unblock Users</a>
+                        <a asp-area="Administration" asp-controller="UsersPenalties" asp-action="HangFire" class="collapse-item">HangFire</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsersInformation" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Users Information</span>
+                </a>
+                <div id="collapseUsersInformation" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Users Filters:</h6>
+                        <a asp-area="Administration" asp-controller="UsersInformation" asp-action="AllUsers" class="collapse-item">All Users</a>
+                        <a asp-area="Administration" asp-controller="UsersInformation" asp-action="BannedUsers" class="collapse-item">Banned Users</a>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <hr class="sidebar-divider">
+            </li>
+            <li class="sidebar-heading">
+                Blog
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBlog" aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <span>Blog Addons</span>
+                </a>
+                <div id="collapseBlog" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom blog addons:</h6>
+                        <a asp-area="Administration" asp-controller="BlogAddons" asp-action="AddCategory" class="collapse-item">Add Category</a>
+                        <a asp-area="Administration" asp-controller="BlogAddons" asp-action="EditCategory" class="collapse-item">Edit Category</a>
+                        <a asp-area="Administration" asp-controller="BlogAddons" asp-action="AddTag" class="collapse-item">Add/Remove Tag</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a asp-area="Administration" asp-controller="PendingPosts" asp-action="Index" class="nav-link">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Pending Posts</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="Administration" asp-controller="PendingComments" asp-action="Index" class="nav-link">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Pending Comments</span>
+                </a>
+            </li>
+
+           
+            <li>
+                <hr class="sidebar-divider d-none d-md-block">
+            </li>
+            <li class="sidebar-heading">
+                Others
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmojiAddons" aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-icons"></i>
+                    <span>Emojis Addons</span>
+                </a>
+                <div id="collapseEmojiAddons" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Add/Remove/Edit Emojis:</h6>
+                        <a asp-area="Administration" asp-controller="AddEmoji" asp-action="Index" class="collapse-item">Add Emoji</a>
+                        <a asp-area="Administration" asp-controller="AddEmojiWithSkin" asp-action="Index" class="collapse-item">Add Emoji With Skin</a>
+                        <a asp-area="Administration" asp-controller="AddEmojis" asp-action="Index" class="collapse-item">Add Emojis</a>
+                        <a asp-area="Administration" asp-controller="EditEmoji" asp-action="Index" class="collapse-item">Edit Emoji</a>
+                        <a asp-area="Administration" asp-controller="EditEmojiPosition" asp-action="Index" class="collapse-item">Edit Emoji Position</a>
+                        <a asp-area="Administration" asp-controller="AllEmojis" asp-action="Index" class="collapse-item">All Emojis</a>
+                        <a asp-area="Administration" asp-controller="DeleteEmoji" asp-action="Index" class="collapse-item">Delete Emoji</a>
+                        <a asp-area="Administration" asp-controller="DeleteEmojisByType" asp-action="Index" class="collapse-item">Delete Emojis By Type</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStikersTypeAddons" aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-theater-masks"></i>
+                    <span>Sticker Addons</span>
+                </a>
+                <div id="collapseStikersTypeAddons" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Sticker Actions:</h6>
+                        <a asp-area="Administration" asp-controller="AddChatStickerType" asp-action="Index" class="collapse-item">Add Sticker Type</a>
+                        <a asp-area="Administration" asp-controller="EditChatStickerType" asp-action="Index" class="collapse-item">Edit Sticker Type</a>
+                        <a asp-area="Administration" asp-controller="DeleteChatStickerType" asp-action="Index" class="collapse-item">Delete Sticker Type</a>
+                        <a asp-area="Administration" asp-controller="AddChatSticker" asp-action="Index" class="collapse-item">Add Sticker</a>
+                        <a asp-area="Administration" asp-controller="AddChatStickers" asp-action="Index" class="collapse-item">Add Stickers</a>
+                        <a asp-area="Administration" asp-controller="EditChatSticker" asp-action="Index" class="collapse-item">Edit Sticker</a>
+                        <a asp-area="Administration" asp-controller="DeleteChatSticker" asp-action="Index" class="collapse-item">Delete Sticker</a>
+                        <a asp-area="Administration" asp-controller="AllChatStickers" asp-action="Index" class="collapse-item">All Stickers</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseChatAddons" aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Chat Addons</span>
+                </a>
+                <div id="collapseChatAddons" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Add/Remove Themes:</h6>
+                        <a asp-area="Administration" asp-controller="AddChatTheme" asp-action="Index" class="collapse-item">Add Theme</a>
+                        <a asp-area="Administration" asp-controller="EditChatTheme" asp-action="Index" class="collapse-item">Edit Theme</a>
+                        <a asp-area="Administration" asp-controller="DeleteChatTheme" asp-action="Index" class="collapse-item">Delete Theme</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHolidayAddons" aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-gift"></i>
+                    <span>Holiday Addons</span>
+                </a>
+                <div id="collapseHolidayAddons" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Holiday Themes Actions:</h6>
+                        <a asp-area="Administration" asp-controller="AddHolidayTheme" asp-action="Index" class="collapse-item">Add Holiday Theme</a>
+                        <a asp-area="Administration" asp-controller="AllHolidayThemes" asp-action="Index" class="collapse-item">All Holiday Themes</a>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <hr class="sidebar-divider d-none d-md-block">
+            </li>
+
+            <li class="nav-item active">
+                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-home"></i>
+                    <span>
+                        Home Page
+                    </span>
+                </a>
+            </li>
+
+            <li class="nav-item active">
+                <a class="nav-link" asp-area="" asp-controller="Blog" asp-action="Index">
+                    <i class="fas fa-blog"></i>
+                    <span>
+                        Blog Page
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <hr class="sidebar-divider d-none d-md-block">
+            </li>
+            <li class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </li>
+        </ul>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <form method="post" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <button asp-controller="Dashboard" asp-action="SyncFollowUnfollow" class="btn btn-info btn-icon-split">
+                            <span class="text"><i class="fas fa-sync-alt"></i> Follow/Unfollow</span>
+                        </button>
+                    </form>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@firstName  @lastName</span>
+                                <img class="img-profile rounded-circle" src=@imageUrl>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@username" class="dropdown-item">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a asp-area="Identity" asp-page="/Account/Manage/Index" class="dropdown-item">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a asp-route-tab="AllUsers" asp-area="" asp-controller="Profile" asp-action="Users" class="dropdown-item">
+                                    <i class="fas fa-users fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    All Users
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                @RenderBody()
+            </div>
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; SDV Code Project Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    @*<a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>*@
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a asp-area="Identity" asp-page="/Account/Logout" class="btn btn-primary">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/administration/vendor/jquery/jquery.min.js"></script>
+    <script src="~/administration/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/administration/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/administration/js/sb-admin-2.js"></script>
+    <script src="~/administration/vendor/chart.js/Chart.min.js"></script>
+    <script src="~/administration/js/demo/chart-area-demo.js"></script>
+    <script src="~/administration/js/demo/chart-pie-demo.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/userStatus/js/userStatus.js"></script>
+    <script src="~/privateChat/js/emojiScript.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

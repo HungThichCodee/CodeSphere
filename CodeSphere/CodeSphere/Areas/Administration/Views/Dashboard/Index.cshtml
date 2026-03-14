@@ -1,0 +1,229 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    var proportion = (decimal)Model.DashboardViewModel.TotalBannedUsers / Model.DashboardViewModel.TotalUsersCount;
+    var bannedUsersPercentage = proportion * 100;
+}
+@model DashboardIndexViewModel
+
+<partial name="_TempDataPartial" />
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <a asp-area="Administration" asp-controller="Reports" asp-action="BlogCommentsReport" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+            <i class="fas fa-comments fa-sm text-white-50"></i>
+            Blog Comments Report
+        </a>
+        <a asp-area="Administration" asp-controller="Reports" asp-action="BlogPostsReport" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-blog fa-sm text-white-50"></i>
+            Blog Posts Report
+        </a>
+    </div>
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Users</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.DashboardViewModel.TotalUsersCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Blog Posts</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.DashboardViewModel.TotalBlogPosts</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="far fa-newspaper fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Banned Users (@bannedUsersPercentage?.ToString("F2"))%</div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@Model.DashboardViewModel.TotalBannedUsers</div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: @bannedUsersPercentage%" aria-valuenow=@Model.DashboardViewModel.TotalBannedUsers aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-slash fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Total Administrators</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.DashboardViewModel.TotalUsersInAdminRole</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-tag fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h5 mb-0 text-gray-800">Add new role</h1>
+    </div>
+    <form method="post">
+        <div class="row">
+            <div class="col-xl-6 col-md-9 mb-4">
+                <div class="card border-left-warning shadow h-100 py-4">
+                    <input asp-for="@Model.CreateRole.Role" class="chosen-value addNewRoleValue" type="text" value="" placeholder="Type to filter" autocomplete="off" />
+                    <ul class="value-list newRolesList">
+                        @foreach (var role in @Html.GetEnumSelectList<Roles>())
+                        {
+                            <li id="addRole">@role.Text</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-6 mb-4">
+                <button asp-area="Administration" asp-controller="Dashboard" asp-action="CreateRole" class="btn btn-success btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <span class="text">Add new role</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-md-9 mb-4">
+                <span asp-validation-for="@Model.CreateRole.Role" class="text-danger"></span>
+            </div>
+        </div>
+    </form>
+    <hr />
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h5 mb-0 text-gray-800">Add user in role</h1>
+    </div>
+    <form method="post">
+        <div class="row">
+            <div class="col-xl-6 col-md-9 mb-4">
+                <div class="card border-left-info shadow h-100 py-4">
+                    <input asp-for="@Model.AddUserInRole.Username" class="chosen-value addUserValueForUserInRole" type="text" value="" placeholder="Type to filter" autocomplete="off" required />
+                    <ul class="value-list usersListForUserInRole">
+                        @foreach (var username in Model.DashboardViewModel.Usernames)
+                        {
+                            <li id="userForUserInRole">@username</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-9 mb-4">
+                <div class="card border-left-info shadow h-100 py-4">
+                    <input asp-for="@Model.AddUserInRole.Role" class="chosen-value addRoleValueForUserInRole" type="text" value="" placeholder="Type to filter" autocomplete="off" required />
+                    <ul class="value-list rolesListForUserInRole">
+                        @foreach (var role in @Html.GetEnumSelectList<Roles>())
+                        {
+                            <li id="roleForUserInRole">@role.Text</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <button asp-area="Administration" asp-controller="Dashboard" asp-action="AddUserInRole" class="btn btn-success btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <span class="text">Add user in role</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-md-9 mb-4">
+                <span asp-validation-for="@Model.AddUserInRole.Username" class="text-danger"></span>
+            </div>
+            <div class="col-xl-3 col-md-9 mb-4">
+                <span asp-validation-for="@Model.AddUserInRole.Role" class="text-danger"></span>
+            </div>
+        </div>
+    </form>
+    <hr />
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h5 mb-0 text-gray-800">Remove user from role</h1>
+    </div>
+    <form method="post">
+        <div class="row">
+            <div class="col-xl-6 col-md-9 mb-4">
+                <div class="card border-left-danger shadow h-100 py-4">
+                    <input asp-for="@Model.RemoveUserFromRole.Username" class="chosen-value addUserValueForUserRemoveRole" type="text" value="" placeholder="Type to filter" autocomplete="off" required />
+                    <ul class="value-list usersListForUserRemoveRole">
+                        @foreach (var username in Model.DashboardViewModel.Usernames)
+                        {
+                            <li id="userForUserRemoveRole">@username</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-9 mb-4">
+                <div class="card border-left-danger shadow h-100 py-4">
+                    <input asp-for="@Model.RemoveUserFromRole.Role" class="chosen-value removeRoleValueForUserInRole" type="text" value="" placeholder="Type to filter" autocomplete="off" required />
+                    <ul class="value-list rolesListForUserRemoveRole">
+                        @foreach (var role in @Html.GetEnumSelectList<Roles>())
+                        {
+                            <li id="roleForUserRemoveRole">@role.Text</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <button asp-area="Administration" asp-controller="Dashboard" asp-action="RemoveUserFromRole" class="btn btn-danger btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <span class="text">Remove user from role</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-md-9 mb-4">
+                <span asp-validation-for="@Model.RemoveUserFromRole.Username" class="text-danger"></span>
+            </div>
+            <div class="col-xl-3 col-md-9 mb-4">
+                <span asp-validation-for="@Model.RemoveUserFromRole.Role" class="text-danger"></span>
+            </div>
+        </div>
+    </form>
+    <hr />
+</div>
+@section Scripts {
+    <script src="~/administration/js/addUserInRoleRolesDropDown.js"></script>
+    <script src="~/administration/js/addUserInRoleUsersDropDown.js"></script>
+    <script src="~/administration/js/removeUserInRoleRolesDropDown.js"></script>
+    <script src="~/administration/js/removeUserInRoleUsersDropDown.js"></script>
+    <script src="~/administration/js/addNewRoleDropDown.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

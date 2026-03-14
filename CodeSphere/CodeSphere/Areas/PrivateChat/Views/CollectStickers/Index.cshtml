@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Collect Stickers";
+}
+
+@model CollectStickersBaseModel
+
+<div id="banner-area">
+    <img src="~/images/banner/banner2.jpg" alt="" />
+    <div class="parallax-overlay"></div>
+    <div class="banner-title-content">
+        <div class="text-center">
+            <h2>Collect Chat Stickers</h2>
+            <ul class="breadcrumb">
+                <li>Home</li>
+                <li><a asp-area="PrivateChat" asp-controller="CollectStickers" asp-action="Index"> Collect Stickers</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<section id="main-container">
+    <div class="container">
+        <partial name="_TempDataPartial" />
+        @foreach (var stickerType in this.Model.AllStickerTypes)
+        {
+            @await Html.PartialAsync("_CollectStickersPartial", stickerType)
+        }
+        <div class="row" style="text-align: center">
+            @Html.PagedListPager((IPagedList)Model.AllStickerTypes,
+                    page => Url.Action("Index", "CollectStickers",
+            new { page = page, Area = "PrivateChat" }),
+            PagedListRenderOptions.OnlyShowFivePagesAtATime)
+        </div>
+    </div>
+    <input type="hidden" />
+</section>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/privateChat/js/collectStickersScript.js"></script>
+}

@@ -1,0 +1,98 @@
+﻿.smallImageProductDetails {
+    width: 60px;
+    height: 60px;
+}
+
+.imageDetails {
+    width: 100%;
+    height: 100%;
+}
+
+.validation-message {
+    color: red;
+}
+
+.shoppingCartImage {
+    width: 147px;
+    height: 100px;
+}
+
+.commentAvatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+.btn-comment-circle {
+    height: 20px;
+    position: relative;
+    margin-right: 7px;
+    border-radius: 50% !important;
+}
+
+.comment-icon-collapse {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    height: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+}
+
+.btn-review-circle {
+    height: 27px;
+    position: relative;
+    margin-right: 7px;
+    border-radius: 50% !important;
+}
+
+.deleteReview-icon-collapse {
+    position: absolute;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    height: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+}
+
+.star-rating {
+    direction: rtl;
+    display: inline-block;
+    padding: 20px
+}
+
+    .star-rating input[type=radio] {
+        display: none
+    }
+
+    .star-rating label {
+        color: #bbb;
+        font-size: 18px;
+        padding: 0;
+        cursor: pointer;
+        -webkit-transition: all .3s ease-in-out;
+        transition: all .3s ease-in-out
+    }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input[type=radio]:checked ~ label {
+            color: #f2b600
+        }
+
+.notRatedStars {
+    color: darkgrey !important;
+}
+
+.ratedStar {
+    color: gold !important;
+}
+
+.delete-product-comment {
+    color: red;
+}
+
+    .delete-product-comment:hover {
+        color: black;
+    }

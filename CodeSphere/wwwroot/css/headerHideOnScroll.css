@@ -1,0 +1,22 @@
+/* Styles cho header hide/show */
+#header {
+    position: fixed; /* b?t bu?c ð? transform d?ch mà không làm layout nh?y */
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 9999;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Khi ?n, d?ch hoàn toàn lên trên */
+.header-hidden {
+    transform: translateY(-110%);
+    pointer-events: none; /* tránh ch?n týõng tác bên dý?i */
+}
+
+/* N?u mu?n khi header hi?n ð?y n?i dung xu?ng, thêm padding cho body .header-visible (tùy) */
+/* body.header-visible { padding-top: 70px; transition: padding-top 0.22s ease; } */

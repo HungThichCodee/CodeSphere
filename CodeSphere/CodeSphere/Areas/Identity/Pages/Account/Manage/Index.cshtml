@@ -1,0 +1,181 @@
+﻿@page
+@using CodeSphere.Models.Enums
+@model IndexModel
+@{
+    ViewData["Title"] = "Manage Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+    Layout = "/Areas/Identity/Pages/Account/Manage/_Layout.cshtml";
+}
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<form id="profile-form" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <h2 class="headerSwitch container">Biography</h2>
+        <div class="form-group col-md-12">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.AboutMe"></label>
+            <textarea asp-for="ManageAccountBaseModel.ManageAccountInputModel.AboutMe" class="form-control" style="resize: vertical" rows="6"></textarea>
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.AboutMe" class="text-danger"></span>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <h2 class="headerSwitch container">Identity</h2>
+        <div class="form-group col-md-4">
+            <label asp-for="Username"></label>
+            <input asp-for="Username" class="form-control" disabled />
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.Email"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.Email" class="form-control" disabled />
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.RegisteredOn"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.RegisteredOn" class="form-control" disabled />
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <h2 class="headerSwitch container">Inicials</h2>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.FirstName"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.FirstName" class="form-control" />
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.FirstName" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.LastName"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.LastName" class="form-control" />
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.LastName" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.BirthDate"></label>
+            <input type="date" asp-for="ManageAccountBaseModel.ManageAccountInputModel.BirthDate" class="form-control">
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.BirthDate" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.Country"></label>
+            <input autocomplete="off" list="countries" asp-for="ManageAccountBaseModel.ManageAccountInputModel.Country" class="form-control" type="text" />
+            <datalist id="countries">
+                @foreach (var country in this.Model.ManageAccountBaseModel.ManageAccountViewModel.Countries)
+                {
+                    <option>@country</option>
+                }
+            </datalist>
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.Country" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.State"></label>
+            <input autocomplete="off" list="states" asp-for="ManageAccountBaseModel.ManageAccountInputModel.State" class="form-control" type="text" />
+            <datalist id="states">
+                @foreach (var state in this.Model.ManageAccountBaseModel.ManageAccountViewModel.States)
+                {
+                    <option>@state</option>
+                }
+            </datalist>
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.State" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.City"></label>
+            <input autocomplete="off" list="cities" asp-for="ManageAccountBaseModel.ManageAccountInputModel.City" class="form-control" type="text" />
+            <datalist id="cities">
+                @foreach (var countryCode in this.Model.ManageAccountBaseModel.ManageAccountViewModel.Cities)
+                {
+                    <option>@countryCode</option>
+                }
+            </datalist>
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.City" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.ZipCode"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.ZipCode" class="form-control" type="number" />
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.ZipCode" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.Gender"></label>
+            <select class="form-control" asp-for="ManageAccountBaseModel.ManageAccountInputModel.Gender" asp-items="@Html.GetEnumSelectList<Gender>()"></select>
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.Gender" class="text-danger"></span>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <h2 class="headerSwitch container">Contacts and Social Media</h2>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.CountryCode"></label>
+            <input onblur="checkCountryCode(this)" autocomplete="off" list="countryCodes" class="form-control" type="text" asp-for="ManageAccountBaseModel.ManageAccountInputModel.CountryCode" />
+            <datalist id="countryCodes">
+                @foreach (var countryCode in this.Model.ManageAccountBaseModel.ManageAccountViewModel.CountryCodes)
+                {
+                    <option>@countryCode</option>
+                }
+            </datalist>
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.CountryCode" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.PhoneNumber"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.PhoneNumber" class="form-control" />
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.GitHubUrl"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.GitHubUrl" class="form-control" />
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.GitHubUrl" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.StackoverflowUrl"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.StackoverflowUrl" class="form-control" />
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.StackoverflowUrl" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.FacebookUrl"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.FacebookUrl" class="form-control" />
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.FacebookUrl" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.LinkedinUrl"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.LinkedinUrl" class="form-control" />
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.LinkedinUrl" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.InstagramUrl"></label>
+            <input asp-for="ManageAccountBaseModel.ManageAccountInputModel.InstagramUrl" class="form-control" />
+            <span asp-validation-for="ManageAccountBaseModel.ManageAccountInputModel.InstagramUrl" class="text-danger"></span>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <h2 class="headerSwitch container">Profile Identity</h2>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.ProfilePicture"></label>
+            <div class="file-upload" id="chooseProfileImage">
+                <div class="file-select">
+                    <div class="file-select-button" id="fileName">Choose File</div>
+                    <div class="file-select-name" id="noProfileFile">No file chosen...</div>
+                    <input type="file" asp-for="ManageAccountBaseModel.ManageAccountInputModel.ProfilePicture" id="chooseProfileFile" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="ManageAccountBaseModel.ManageAccountInputModel.CoverImage"></label>
+            <div class="file-upload" id="chooseCoverImage">
+                <div class="file-select">
+                    <div class="file-select-button" id="fileName">Choose File</div>
+                    <div class="file-select-name" id="noCoverFile">No file chosen...</div>
+                    <input type="file" asp-for="ManageAccountBaseModel.ManageAccountInputModel.CoverImage" id="chooseCoverFile" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="form-group col-md-5">
+            <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

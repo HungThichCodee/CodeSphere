@@ -1,0 +1,288 @@
+﻿@{
+    ViewData["Title"] = "Private Chat";
+
+    var icons = new Dictionary<EmojiType, string>()
+{
+        { EmojiType.SmilesAndPeople, "../../../../images/Emojis/SmilesAndPeople.png" },
+        { EmojiType.AnimalsAndNature, "../../../../images/Emojis/AnimalsAndNature.png" },
+        { EmojiType.EatAndDrink, "../../../../images/Emojis/EatAndDrink.png" },
+        { EmojiType.Activities, "../../../../images/Emojis/Activities.png" },
+        { EmojiType.TravelAndPlaces, "../../../../images/Emojis/TravelAndPlaces.png" },
+        { EmojiType.Objects, "../../../../images/Emojis/Objects.png" },
+        { EmojiType.Symbols, "../../../../images/Emojis/Symbols.png" },
+        {EmojiType.Flags, "../../../../images/Emojis/Flags.png" }
+    };
+}
+
+@model PrivateChatViewModel
+
+<div id="banner-area">
+    <img src="~/images/banner/banner2.jpg" alt="" />
+    <div class="parallax-overlay"></div>
+    <div class="banner-title-content">
+        <div class="text-center">
+            <h2>Private Chat</h2>
+            <ul class="breadcrumb">
+                <li>Home</li>
+                <li><a> Private Chat</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container privateChat">
+    <div class="row">
+        <h3 id="groupName" style="text-align:center">@Model.GroupName</h3>
+        <div class="col-md-12">
+            <div id="chatPanel" class="panel" style="background: url(@(this.Model.ChatThemeViewModel.Url ?? "")); background-position: center; background-repeat: no-repeat; background-size: cover;">
+                <!--Heading-->
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                            <h3 class="panel-title" style="float: left" id="toUser">@Model.ToUser.UserName</h3>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <h3 class="panel-title" style="float: right" id="fromUser">@Model.FromUser.UserName</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="nano">
+                    <div onclick="scrollChatToBottom()" class="back-to-bottom-chat-body" id="scrollBottomButton">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div id="demo-chat-body" class="nano-content pad-all" tabindex="0">
+                        <ul class="list-unstyled media-block" id="messagesList">
+                            @if (Model.ChatMessages != null && Model.ChatMessages.Count != 0)
+                            {
+                                @foreach (var message in Model.ChatMessages)
+                                {
+                                    @if (message.ReceiverUsername == Model.ToUser.UserName && message.ApplicationUser.UserName != Model.ToUser.UserName)
+                                    {
+                                        <li class="mar-btm" id="@message.Id">
+                                            <div class="media-right">
+                                                <img src="@(string.IsNullOrWhiteSpace(message.ApplicationUser.ImageUrl) ? Url.Content("~/images/AnhDaiDien.png") : message.ApplicationUser.ImageUrl)" class="img-circle img-sm" alt="Profile Picture">
+                                            </div>
+                                            <div class="media-body pad-hor speech-right">
+                                                <div class="speech">
+                                                    <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@Model.FromUser.UserName" class="media-heading">@Model.FromUser.UserName</a>
+                                                    <p>@Html.Raw(message.Content)</p>
+                                                    <p class="speech-time">
+                                                        <i class="fa fa-clock-o fa-fw"></i> @message.SendedOn
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        @if (message.ReceiverUsername != Model.ToUser.UserName && message.ApplicationUser.UserName != Model.FromUser.UserName)
+                                        {
+                                            <li class="mar-btm" id="@message.Id">
+                                                <div class="media-left">
+                                                    <img src="@(string.IsNullOrWhiteSpace(message.ApplicationUser.ImageUrl) ? Url.Content("~/images/AnhDaiDien.png") : message.ApplicationUser.ImageUrl)" class="img-circle img-sm" alt="Profile Picture">
+                                                </div>
+                                                <div class="media-body pad-hor">
+                                                    <div class="speech">
+                                                        <a asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@Model.ToUser.UserName" class="media-heading">@Model.ToUser.UserName</a>
+                                                        <p>@Html.Raw(message.Content)</p>
+                                                        <p class="speech-time">
+                                                            <i class="fa fa-clock-o fa-fw"></i>@message.SendedOn
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                }
+                            }
+                            @*Here Goose your messages*@
+                        </ul>
+                        <input id="messagesSkipCount" type="hidden" value="@this.Model.ChatMessages.Count" />
+                    </div>
+                    <div class="nano-pane">
+                        <div class="nano-slider" style="height: 141px; transform: translate(0px, 0px);"></div>
+                    </div>
+                </div>
+
+                <!--Widget footer-->
+                <div class="panel-chat-footer">
+                    <div class="row">
+                        <div class="col-md-10 col-xs-9">
+                            <span onclick="addQuickReply()" class="quick-replies-add-badge" id="quickRepliesAddBadge">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                            <div class="chat-input" 
+                                 onclick="userType('@this.Model.ToUser.UserName', '@this.Model.FromUser.UserName', '@(string.IsNullOrWhiteSpace(Model.FromUser.ImageUrl) ? Url.Content("~/images/AnhDaiDien.png") : Model.FromUser.ImageUrl)')" 
+                                 onblur="userStopType('@this.Model.ToUser.UserName')" 
+                                 contenteditable="true" 
+                                 id="messageInput" 
+                                 oninput="updateInputScroller()"></div>
+                            @*<input autocomplete="off" type="text" placeholder="Enter your text" class="form-control chat-input" id="messageInput">*@
+                            <div class="chat-emoji-icon pop-up-emoji" id="emojiButton">
+                                <i class="far fa-smile"></i>
+                                <div class="popupEmojiBox" id="popupEmoji">
+                                    <div class="emojiTypesTabs">
+                                        @for (int i = 0; i < this.Model.Emojis.Keys.Count; i++)
+                                        {
+                                            <span class="emojiTabIcon">
+                                                <img onclick="changeEmojisTabs('@this.Model.Emojis.Keys.ElementAt(i).ToString()')" id="@this.Model.Emojis.Keys.ElementAt(i).ToString()-Tab" class="singleEmojiForTab emoji-type-tab" style="background-color: @(i == 0 ? "#727272" : "");" src="@icons[this.Model.Emojis.Keys.ElementAt(i)]" />
+                                            </span>
+                                        }
+                                    </div>
+                                    @for (int i = 0; i < this.Model.Emojis.Keys.Count; i++)
+                                    {
+                                        var indicator = 1;
+
+                                        <div class="emoji-tab-section" style="display: @(i == 0 ? "block" : "none")" id="@this.Model.Emojis.Keys.ElementAt(i).ToString()-Tab-Section">
+                                            @for (int j = 0; j < this.Model.Emojis[this.Model.Emojis.Keys.ElementAt(i)].Count; j++)
+                                            {
+                                                <span title="@this.Model.Emojis[this.Model.Emojis.Keys.ElementAt(i)].ElementAt(j).Name" class="tooltipEmoji" style="position: relative; display: inline-block;">
+                                                    <img class="@(this.Model.Emojis[this.Model.Emojis.Keys.ElementAt(i)].ElementAt(j).SkinsUrls.Count > 0 ? "hasEmojiSkin" : "singleEmoji")" src="@this.Model.Emojis[this.Model.Emojis.Keys.ElementAt(i)].ElementAt(j).Url" />
+                                                    @if (this.Model.Emojis[this.Model.Emojis.Keys.ElementAt(i)].ElementAt(j).SkinsUrls.Count > 0)
+                                                    {
+                                                        <span class="@(indicator <= 3 ? "tooltipEmojiSpanRight" : "tooltipEmojiSpanLeft")">
+                                                            @foreach (var skinUrl in this.Model.Emojis[this.Model.Emojis.Keys.ElementAt(i)].ElementAt(j).SkinsUrls)
+                                                            {
+                                                                <img class="singleEmoji" src="@skinUrl" />
+                                                            }
+                                                        </span>
+                                                    }
+                                                </span>
+
+                                                if (indicator >= 6)
+                                                {
+                                                    indicator = 0;
+                                                }
+
+                                                indicator++;
+                                            }
+                                        </div>
+                                    }
+                                    <div class="emojiSearchTab" style="display: none;">
+                                        <input oninput="filterEmojis(this, false)" class="form-control emojiSearchInput" type="text" autocomplete="off" placeholder="Search emoji..." />
+                                    </div>
+                                    <span onclick="toggleSearchEmojiInput(this)" class="hideSearchEmojiIcon">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-xs-3">
+                            <button class="btn btn-info btn-block" type="submit" id="sendButton">Send</button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 5px">
+                        <div class="col-md-10 col-xs-9">
+                            <div class="chat-action-icon stickers-icon" id="stickersButton">
+                                <i class="fas fa-theater-masks"></i>
+                                <div id="chatStickerSpan" class="chat-sticker-tooltip">
+                                    <div class="stickersTypesTabs">
+                                        @for (int i = 0; i < this.Model.AllStickers.Count; i++)
+                                        {
+                                            <span class="stickerTypeTabIcon" id="@this.Model.AllStickers.ElementAt(i).Id">
+                                                <img id="@this.Model.AllStickers.ElementAt(i).Id-Tab" style="background-color: @(i == 0 ? "lightgrey" : "");" onclick="changeStickersTabs('@this.Model.AllStickers.ElementAt(i).Id')" class="singleStickerTypeForTab" src="@this.Model.AllStickers.ElementAt(i).Url" />
+                                                <span class="remove-sticker-type-icon" onclick="removeStickerType('@this.Model.AllStickers.ElementAt(i).Id')">
+                                                    <i class="fas fa-times-circle"></i>
+                                                </span>
+                                            </span>
+                                        }
+                                    </div>
+                                    <div class="stickers-tab-container">
+                                        @for (int i = 0; i < this.Model.AllStickers.Count; i++)
+                                        {
+                                            <span class="sticker-tab-section" style="display: @(i == 0 ? "block" : "none")" id="@this.Model.AllStickers.ElementAt(i).Id-Tab-Section">
+                                                @for (int j = 0; j < this.Model.AllStickers.ElementAt(i).Stickers.Count; j++)
+                                                {
+                                                    <img onclick="sendStickerMessage('@this.Model.AllStickers.ElementAt(i).Stickers.ElementAt(j).Url')" class="single-sticker" src="@this.Model.AllStickers.ElementAt(i).Stickers.ElementAt(j).Url" />
+                                                }
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-action-icon themes-icon" id="themeButton">
+                                <i class="fas fa-paint-brush"></i>
+                                @if (this.Model.AllChatThemes.Count > 0)
+                                {
+                                    <div class="chat-theme-tooltip-image">
+                                        <div id="themeSpan" class="theme-span">
+                                            @foreach (var theme in this.Model.AllChatThemes)
+                                            {
+                                                <span class="theme-image">
+                                                    <span style="position: relative">
+                                                        <img onclick="changeTheme(this, '@theme.Id', '@theme.Name', '@theme.Url')" src="@theme.Url" />
+                                                        @if (this.Model.ChatThemeViewModel.Id == theme.Id)
+                                                        {
+                                                            <span class="select-theme-badge">
+                                                                <i class="fas fa-check"></i>
+                                                            </span>
+                                                        }
+                                                    </span>
+                                                </span>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="chat-action-icon savedReplies-icon" id="savedRepliesButton">
+                                <i class="fas fa-bookmark"></i>
+                                <span class="quick-replies-badge" id="quickRepliesCount">
+                                    @this.Model.AllQuickChatReplies.Count()
+                                </span>
+                                <div class="chat-savedReplies-tooltip-image" id="savedRepliesSpan">
+                                    <div class="quickRepliesSearchTab">
+                                        <input class="form-control quick-replies-search-input" id="quickRepliesSearchInputFiled" autocomplete="off" placeholder="Search quick reply..." type="text" />
+                                    </div>
+                                    <div class="savedReplies-span" id="repliesCollection">
+                                        @foreach (var reply in this.Model.AllQuickChatReplies)
+                                        {
+                                            <div class="savedReplies-frame" id="@reply.Id">
+                                                <div class="savedReplies-badge" onclick="pasteQuickReply(this)">
+                                                    @Html.Raw(reply.Reply)
+                                                </div>
+                                                <span class="delete-savedRelies-icon" onclick="deleteWuickReply('@reply.Id')">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="uploadImage" class="chat-action-icon" style="margin: 0; cursor: pointer;">
+                                <i class="far fa-images"></i>
+                            </label>
+                            <input accept="image/jpeg,image/jpg,image/png" type="file" multiple id="uploadImage" style="display: none;">
+                            <span class="select-image-badge">0</span>
+                            <div id="imageSpinner"></div>
+                            
+                            <label for="uploadFile" class="chat-action-icon" style="margin: 0; cursor: pointer;">
+                                <i class="fas fa-paperclip"></i>
+                            </label>
+                            <input accept=".zip,.rar,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.txt" type="file" multiple id="uploadFile" style="display: none;">
+                            <span class="select-file-badge">0</span>
+                            <div id="fileSpinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modalChatImage">
+    <div class="imageModalContent">
+        <i onclick="closeChatZoomedImage()" class="fas fa-window-close closeImage"></i>
+    </div>
+    <img id="image-content" class="imageModalContent" src="">
+    <div class="myCaption"></div>
+</div>
+
+@section Scripts {
+    <script src="~/privateChat/js/privateChat.js"></script>
+    <script src="~/privateChat/js/emojiScript.js"></script>
+    <script src="~/privateChat/js/chatThemesScript.js"></script>
+    <script src="~/privateChat/js/chatImagesScript.js"></script>
+    <script src="~/privateChat/js/chatFilesScript.js"></script>
+    <script src="~/privateChat/js/chatStickersScript.js"></script>
+    <script src="~/privateChat/js/chatPerformanceScript.js"></script>
+    <script src="~/privateChat/js/chatSavedRepliesScript.js"></script>
+}

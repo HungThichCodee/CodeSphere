@@ -1,0 +1,18 @@
+﻿@if (this.SignInManager.IsSignedIn(User))
+{
+    <li>
+        <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Index" asp-route-username="@User.Identity.Name">Profile</a>
+    </li>
+    <li>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Logout">Logout</a>
+    </li>
+}
+else
+{
+    <li>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
